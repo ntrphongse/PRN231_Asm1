@@ -1,0 +1,71 @@
+﻿@model IEnumerable<BusinessObject.Member>
+
+@{
+    ViewData["Title"] = "Members List";
+}
+
+<h1>Members</h1>
+
+<p>
+    <a class="btn btn-outline-success" asp-action="Create">Create New Member</a>
+</p>
+@if (Model != null && Model.Any())
+{
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CompanyName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.City)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Country)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Password)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.City)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Country)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Password)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.MemberId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.MemberId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.MemberId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (ViewData["Members"] != null)
+{
+    <div class="row ml-0 mr-0">
+        <p class="text-danger">@ViewData["Members"]</p>
+    </div>
+} 

@@ -1,0 +1,148 @@
+﻿@model eStoreClient.Models.OrderDetailsModel
+@using BusinessObject
+
+@{
+    ViewData["Title"] = "Create Order";
+    IEnumerable<OrderDetail> orderDetails = ViewData["OrderDetails"] as IEnumerable<OrderDetail>;
+}
+
+<h1>Create</h1>
+
+<h4>Order</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*<div class="form-group">
+                <label asp-for="OrderId" class="control-label"></label>
+                <input asp-for="OrderId" class="form-control" />
+                <span asp-validation-for="OrderId" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <label asp-for="MemberId" class="control-label"></label>
+                <select asp-for="MemberId" class="form-control" asp-items="ViewBag.MemberId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="OrderDate" class="control-label"></label>
+                <input asp-for="OrderDate" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")" asp-format="{0:yyyy-MM-ddTHH:mm:ss}" readonly />
+                <span asp-validation-for="OrderDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RequiredDate" class="control-label"></label>
+                <input asp-for="RequiredDate" class="form-control" />
+                <span asp-validation-for="RequiredDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ShippedDate" class="control-label"></label>
+                <input asp-for="ShippedDate" class="form-control" />
+                <span asp-validation-for="ShippedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Freight" class="control-label"></label>
+                <input asp-for="Freight" class="form-control" />
+                <span asp-validation-for="Freight" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" @(orderDetails == null || !orderDetails.Any() ? "disabled" : "") />
+            </div>
+        </form>
+        @if (ViewData["Orders"] != null)
+        {
+            <p class="text-danger">@ViewData["Orders"] </p>
+        }
+    </div>
+    <div class="col-md-7 offset-md-1">
+        <h5>Order Details</h5>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Product.ProductName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UnitPrice)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Quantity)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Discount)
+                    </th>
+                    @*<th>
+                            Sum
+                        </th>*@
+                </tr>
+            </thead>
+            <tbody id="orderProductsDetails">
+                @if (orderDetails != null && orderDetails.Any())
+                {
+                    @foreach (var item in orderDetails)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Product.ProductName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UnitPrice)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Discount)
+                            </td>
+                            @*<td>
+                                    @Html.DisplayFor(modelItem => item.Order.OrderId)
+                                </td>*@
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        @if (orderDetails != null && orderDetails.Any())
+        {
+            <p class="text-success">Order Total: @orderDetails.Sum(od => od.UnitPrice * od.Quantity * (1 - (decimal)od.Discount / 100)).ToString("N")</p>
+        }
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <h4>Add to Cart</h4>
+        <form asp-action="AddToCart">
+            <div class="form-group">
+                <label asp-for="Product" class="control-label"></label>
+                <select asp-for="ProductId" class="form-control" asp-items="ViewBag.ProductsSelectedList"></select>
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Discount" class="control-label"></label>
+                <input asp-for="Discount" class="form-control" />
+                <span asp-validation-for="Discount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add To Cart" class="btn btn-outline-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+@if (TempData["Orders"] != null)
+{
+    <p class="text-danger">@TempData["Orders"] </p>
+}
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

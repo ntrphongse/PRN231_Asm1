@@ -1,0 +1,117 @@
+﻿@model IEnumerable<BusinessObject.Product>
+
+@{
+    ViewData["Title"] = "Products List";
+}
+
+<h1>Products</h1>
+
+<p>
+    <a class="btn btn-outline-success" asp-action="Create">Create New Product</a>
+</p>
+
+<div class="row">
+    <div class="col-md-5">
+        <form asp-action="Index" method="get">
+            <div class="form-group">
+                <label for="searchString" class="control-label">Search: </label>
+                <input id="searchString" name="searchString"
+                       class="form-control" value="@ViewData["Search"]" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Search" class="btn btn-outline-success" />
+            </div>
+        </form>
+    </div>
+    <div class="col-md-5 offset-md-1">
+        <form asp-action="Index" method="get">
+            <div class="form-group mb-0">
+                <label class="control-label mb-0">Filter by Unit Price: </label>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="startPrice" class="control-label d-inline">Start Price: </label>
+                        <input id="startPrice" name="startPrice"
+                               class="form-control" type="number" step="any" value="@ViewData["StartPrice"]" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="endPrice" class="control-label d-inline">End Price: </label>
+                        <input id="endPrice" name="endPrice"
+                               class="form-control" type="number" step="any" value="@ViewData["EndPrice"]" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Filter" class="btn btn-outline-success" />
+            </div>
+        </form>
+    </div>
+    <div class="col-12">
+        @if (ViewData["SearchError"] != null)
+        {
+            <p class="text-danger">@ViewData["SearchError"]</p>
+        }
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Weight)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitsInStock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Weight)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UnitPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UnitsInStock)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+@if (ViewData["Products"] != null)
+{
+    <div class="row ml-0 mr-0">
+        <p class="text-danger">@ViewData["Products"]</p>
+    </div>
+}
